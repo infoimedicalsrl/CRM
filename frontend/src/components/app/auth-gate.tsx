@@ -17,6 +17,19 @@ export function useSession() {
   return { session, loading };
 }
 
+function describeLoginError(err: { message?: string; status?: number; code?: string }): string {
+  const msg = (err.message ?? "").toLowerCase();
+  const code = (err.code ?? "").toLowerCase();
+  if (code === "invalid_credentials" || msg.includes("invalid login credentials")) return "Email o password errate.";
+  if (code === "email_not_confirmed" || msg.includes("not confirmed")) return "Email non confermata: in Supabase conferma l'utente (Authentication → Users).";
+  if (msg.includes("invalid api key") || msg.includes("apikey") || err.status === 401)
+    return "Chiave Supabase non valida: controlla VITE_SUPABASE_ANON_KEY su Vercel e rifai il deploy.";
+  if (err.status === 0 || msg.includes("fetch") || msg.includes("network"))
+    return "Impossibile contattare Supabase: controlla VITE_SUPABASE_URL su Vercel e rifai il deploy.";
+  if (code === "over_request_rate_limit" || err.status === 429) return "Troppi tentativi: attendi qualche minuto.";
+  return `Accesso non riuscito: ${err.message ?? "errore sconosciuto"}`;
+}
+
 function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,7 +40,7 @@ function LoginScreen() {
     e.preventDefault();
     setBusy(true); setError("");
     const { error: err } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
-    if (err) setError("Credenziali non valide.");
+    if (err) setError(describeLoginError(err));
     setBusy(false);
   }
 
