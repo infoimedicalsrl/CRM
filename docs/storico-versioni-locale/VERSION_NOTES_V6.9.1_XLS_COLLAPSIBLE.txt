@@ -1,0 +1,12 @@
+Peppol Sales Analytics V6.9.1
+
+Correzioni:
+- Importazione massiva supporta il formato Excel binario .xls oltre a .xlsx e .xlsm.
+- Il backend usa xlrd per leggere .xls, incluse le celle data di Excel.
+- Selettore file frontend aggiornato per accettare .xls.
+- Le card "Importa fattura PDF o XML" e "Importazione massiva da Excel" sono collassate per impostazione iniziale e si aprono cliccando l'intestazione.
+
+Installazione:
+- Conservare una copia della cartella data/database.sqlite prima di aggiornare.
+- Estrarre in una cartella separata e avviare Avvia Peppol.command.
+- L'avvio deve installare le dipendenze Python definite in backend/requirements.txt.

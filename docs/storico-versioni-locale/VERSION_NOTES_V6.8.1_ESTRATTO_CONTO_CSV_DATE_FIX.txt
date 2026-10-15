@@ -1,0 +1,10 @@
+Peppol Sales Analytics V6.8.1 — Correzione importazione estratto conto cliente
+
+Correzioni:
+- Il campo "Liquidato" viene trattato come importo, non come data.
+- La data della riga viene letta prima dalla data dell'Ordinativo e, se assente, dalla data inclusa in "Doc.".
+- Riconosciuti formati come "11-08-2025" e "18-FEB-25" (anche mesi italiani abbreviati).
+- Per l'abbinamento fatture, il numero documento viene separato dalla data aggiunta dopo "del" (es. "52/PA del 11-08-2025" → "52/PA").
+- Rimane attivo il vincolo di importare e riconciliare solo righe/documenti riferiti al 2026.
+
+Nota: le due righe di esempio del cliente hanno date 2025, quindi non vengono importate nell'archivio strutturato 2026. Se l'ordinativo è del 2026, la riga viene invece classificata in base alla data dell'ordinativo.

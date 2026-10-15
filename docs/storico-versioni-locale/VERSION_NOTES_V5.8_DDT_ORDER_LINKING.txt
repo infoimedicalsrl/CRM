@@ -1,0 +1,26 @@
+PEPPOL SALES ANALYTICS V5.8 – DDT / ORDINE
+
+1. CORRISPONDENZA NUMERO ORDINE DDT
+- Il matching automatico riconosce formati equivalenti come:
+  - ordine XML: 2026/9562V1
+  - riferimento DDT: 9562V1/26
+- Il confronto è case-insensitive e tollera spazi.
+- Se entrambi i riferimenti contengono l'anno, l'anno deve coincidere.
+- Il matching viene usato sia all'importazione del DDT sia quando un ordine viene importato successivamente.
+- I suggerimenti DDT danno priorità a una corrispondenza esatta/equivalente del riferimento ordine.
+
+2. COLLEGAMENTO MANUALE DDT -> ORDINE
+- Nella pagina dettaglio DDT è presente il pulsante "Collega manualmente".
+- Apre una finestra di ricerca dedicata per numero ordine, cliente o P.IVA.
+- Gli ordini con riferimento equivalente vengono evidenziati come "Riferimento compatibile".
+- Il collegamento manuale aggiorna lo stato DDT e ricalcola le quantità consegnate/residue dell'ordine.
+- Il PDF originale non viene modificato.
+
+3. TEST
+- Test automatico verificato: 9562V1/26 -> 2026/9562V1.
+- Verificato che 2026/9562V1 NON venga erroneamente associato a 2025/9562V1.
+- backend compileall OK.
+- start.sh sintassi OK e permesso 755.
+
+NOTA
+Il progetto continua a usare SQLite locale e non invia dati aziendali a servizi cloud.

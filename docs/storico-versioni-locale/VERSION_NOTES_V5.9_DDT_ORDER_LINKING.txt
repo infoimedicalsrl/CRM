@@ -1,0 +1,16 @@
+PEPPOL SALES ANALYTICS V5.9 – DDT ORDER LINKING
+
+Correzioni:
+- Normalizzazione cliente: prefissi numerici e trattini prima del nome vengono ignorati. Esempio: "924 - Azienda Ospedaliera Papardo" diventa "Azienda Ospedaliera Papardo".
+- All’avvio viene eseguita una migrazione leggera dei clienti già presenti nel database per pulire questi prefissi.
+- Nuovi clienti importati da XML/DDT usano la stessa normalizzazione.
+- La modifica manuale del nome cliente applica la stessa normalizzazione.
+- Ricerca manuale DDT -> ordine non dipende più dal customer_id esatto: considera anche nome cliente normalizzato e P.IVA e ordina i risultati mettendo prima il cliente corrispondente.
+- La ricerca manuale riconosce anche riferimenti ordine equivalenti, ad esempio 9562V1/26 <-> 2026/9562V1.
+- I suggerimenti automatici DDT non sono più limitati rigidamente al customer_id: usano customer_id, nome normalizzato e P.IVA come segnali.
+- Il collegamento retroattivo DDT importato prima dell’ordine usa gli stessi criteri di cliente normalizzato/P.IVA.
+- UI: nel collegamento manuale viene mostrato il badge "Cliente corrispondente" quando il cliente è riconosciuto.
+
+Dati locali:
+- Il database SQLite esistente non viene sostituito.
+- Il PDF/XML originale non viene modificato.

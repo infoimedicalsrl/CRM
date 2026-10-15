@@ -1,0 +1,16 @@
+PEPPOL SALES ANALYTICS V6.7.1
+
+Modifiche:
+1. In Fatture di vendita, dopo il collegamento di un movimento bancario, non viene più mostrato il pulsante Trova incasso/Nascondi proposte per quella fattura.
+2. Per ogni incasso collegato sono disponibili Modifica incasso e Scollega.
+3. Modifica incasso consente di modificare data contabile, importo, controparte e causale del movimento bancario; le modifiche interessano il movimento nell'archivio bancario locale.
+4. Scollega rimuove solo il collegamento alla fattura: il movimento bancario non viene cancellato. È richiesta conferma.
+5. Inserimento manuale fattura aperto da pulsante e visualizzato in un pannello laterale a destra.
+6. Aggiunta cartella fatture con sottocartelle nuove, elaborate e errori. I PDF/XML importati dall'interfaccia vengono copiati in fatture/elaborate/AAAA/MM. Le fatture manuali restano nel database perché non hanno un file sorgente.
+
+Verifiche effettuate in questo ambiente:
+- Compilazione sintattica Python backend: superata.
+- Test backend esclusi tests/test_parser.py: 18 superati.
+- La suite tests/test_parser.py non è stata eseguita in questa verifica perché richiede variabili d'ambiente PEPPOL_SIMPLE_XML e PEPPOL_MULTI_XML.
+- Build TypeScript/Vite non verificata: l'installazione npm ci non è terminata in tempo nell'ambiente di lavoro.
+- Non testato su macOS Apple Silicon reale.

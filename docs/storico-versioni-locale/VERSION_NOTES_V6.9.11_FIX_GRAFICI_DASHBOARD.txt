@@ -1,0 +1,20 @@
+Peppol Sales Analytics — V6.9.11
+
+Correzioni dashboard
+
+1. Andamento fatturato
+- Il grafico annuale usa le fatture di vendita e raggruppa gli importi per mese in base alla data di emissione.
+- Visualizza sempre i 12 mesi dell'anno selezionato e due serie di barre affiancate: Netto e Lordo, come nel mockup approvato.
+- La selezione dell'anno è indipendente dai filtri globali con intervallo personalizzato.
+- Gestisce caricamento, errore di lettura e anno senza fatture/importi, senza lasciare la scheda apparentemente vuota.
+
+2. Distribuzione fatturato per cliente
+- Grafico ad anello centrato nella scheda.
+- Leggenda spostata sotto il grafico.
+- Mostra i primi quattro clienti e aggrega gli altri nella voce “Altri clienti”, così la distribuzione include tutto il fatturato.
+- Importi e percentuali sono calcolati sul fatturato lordo dell'anno selezionato; il totale lordo è al centro dell'anello.
+
+Nota di verifica
+- Il pacchetto è stato controllato a livello di integrità ZIP.
+- La compilazione TypeScript/Vite non è stata completata in questo ambiente: l'installazione delle dipendenze è incompleta (manca vite/client.d.ts). Non dichiarare la build verificata.
+- Non sono stati modificati né inclusi database aziendali o dati locali.
