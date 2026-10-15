@@ -1,13 +1,16 @@
 from sqlalchemy import create_engine, func, inspect, literal_column, text
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
-from sqlalchemy.pool import NullPool
 from app.config import DATABASE_URL, IS_REMOTE_DATABASE
 from app.normalization import normalize_product_code, normalize_customer_name
 
 if IS_REMOTE_DATABASE:
-    # Serverless + pooler Supabase (Supavisor): niente pool lato app e niente prepared
-    # statements, incompatibili con la modalità "transaction" del pooler.
-    _engine_options = {"poolclass": NullPool, "connect_args": {"prepare_threshold": None, "connect_timeout": 10}}
+    # Pooler Supabase in modalita' "transaction": niente prepared statements. Un piccolo pool
+    # per istanza riusa le connessioni tra richieste ravvicinate (aprirne una nuova costa
+    # diversi round-trip verso il database); pre_ping scarta quelle chiuse dal pooler.
+    _engine_options = {
+        "pool_size": 2, "max_overflow": 3, "pool_pre_ping": True, "pool_recycle": 240, "pool_timeout": 15,
+        "connect_args": {"prepare_threshold": None, "connect_timeout": 10},
+    }
 else:
     _engine_options = {"pool_pre_ping": True, "connect_args": {"check_same_thread": False}}
 engine = create_engine(DATABASE_URL, **_engine_options)

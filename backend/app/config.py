@@ -32,9 +32,19 @@ elif DATABASE_URL.startswith("postgresql://"):
 IS_REMOTE_DATABASE = not DATABASE_URL.startswith("sqlite:")
 
 # --- Supabase (Auth + Storage) -------------------------------------------
-SUPABASE_URL = _env("SUPABASE_URL").rstrip("/")
-SUPABASE_ANON_KEY = _env("SUPABASE_ANON_KEY")                 # pubblica: serve a validare i token
-SUPABASE_SERVICE_ROLE_KEY = _env("SUPABASE_SERVICE_ROLE_KEY")  # SEGRETA: solo backend (Storage)
+def _origin(value: str) -> str:
+    """Tiene solo https://xxxx.supabase.co (toglie "/" finali e percorsi per errore)."""
+    from urllib.parse import urlparse
+    raw = value.strip().strip("\"'")
+    if not raw:
+        return ""
+    parsed = urlparse(raw if "://" in raw else f"https://{raw}")
+    return f"{parsed.scheme}://{parsed.netloc}" if parsed.netloc else ""
+
+
+SUPABASE_URL = _origin(_env("SUPABASE_URL"))
+SUPABASE_ANON_KEY = _env("SUPABASE_ANON_KEY").strip("\"'")                 # pubblica: serve a validare i token
+SUPABASE_SERVICE_ROLE_KEY = _env("SUPABASE_SERVICE_ROLE_KEY").strip("\"'")  # SEGRETA: solo backend (Storage)
 STORAGE_BUCKET = _env("SUPABASE_STORAGE_BUCKET", "documents")
 
 # Se vuoto, qualsiasi utente autenticato di QUESTO progetto Supabase può entrare.

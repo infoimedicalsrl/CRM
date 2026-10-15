@@ -1,7 +1,18 @@
 import { createClient } from "@supabase/supabase-js";
 
-const url = import.meta.env["VITE_SUPABASE_URL"] as string | undefined;
-const anonKey = import.meta.env["VITE_SUPABASE_ANON_KEY"] as string | undefined;
+/** Tiene solo https://xxxx.supabase.co: toglie spazi, "/" finali e percorsi come /rest/v1. */
+function cleanOrigin(value: string | undefined): string | undefined {
+  const raw = (value ?? "").trim().replace(/^["']|["']$/g, "");
+  if (!raw) return undefined;
+  try {
+    return new URL(/^https?:\/\//i.test(raw) ? raw : `https://${raw}`).origin;
+  } catch {
+    return undefined;
+  }
+}
+
+const url = cleanOrigin(import.meta.env["VITE_SUPABASE_URL"] as string | undefined);
+const anonKey = ((import.meta.env["VITE_SUPABASE_ANON_KEY"] as string | undefined) ?? "").trim().replace(/^["']|["']$/g, "") || undefined;
 
 export const supabaseConfigured = Boolean(url && anonKey);
 

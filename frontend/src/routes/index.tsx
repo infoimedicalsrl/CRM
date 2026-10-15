@@ -45,9 +45,9 @@ function DashboardPage() {
   const [year, setYear] = useState(String(currentYear));
   const [filters, setFilters] = useState<GlobalFilterState>({ from: `${currentYear}-01-01`, to: `${currentYear}-12-31` });
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const dashboard = useQuery({ queryKey: ["dashboard", filters], queryFn: () => getDashboard(filters), retry: false, refetchInterval: 30_000 });
-  const invoices = useQuery({ queryKey: ["dashboard", "sales-invoices"], queryFn: () => apiGet<SalesInvoice[]>("/api/sales-invoices"), retry: false, refetchInterval: 30_000 });
-  const financial = useQuery({ queryKey: ["dashboard", "financial-summary", filters.from, filters.to], queryFn: () => apiGet<FinancialSummary>("/api/dashboard/financial-summary", { date_from: filters.from, date_to: filters.to }), retry: false, refetchInterval: 30_000 });
+  const dashboard = useQuery({ queryKey: ["dashboard", filters], queryFn: () => getDashboard(filters), retry: false });
+  const invoices = useQuery({ queryKey: ["dashboard", "sales-invoices"], queryFn: () => apiGet<SalesInvoice[]>("/api/sales-invoices"), retry: false });
+  const financial = useQuery({ queryKey: ["dashboard", "financial-summary", filters.from, filters.to], queryFn: () => apiGet<FinancialSummary>("/api/dashboard/financial-summary", { date_from: filters.from, date_to: filters.to }), retry: false });
   const data = dashboard.data;
   const allInvoices = invoices.data ?? [];
   const yearInvoices = useMemo(() => allInvoices.filter((invoice) => (!filters.from || invoice.issue_date >= filters.from) && (!filters.to || invoice.issue_date <= filters.to)), [allInvoices, filters.from, filters.to]);

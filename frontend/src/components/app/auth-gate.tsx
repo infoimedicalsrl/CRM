@@ -5,13 +5,27 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase, supabaseConfigured } from "@/lib/supabase";
+import { CACHE_USER_KEY, clearQueryCache } from "@/lib/query-cache";
+import { buildApiUrl } from "@/services/api";
 
 export function useSession() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => { setSession(data.session); setLoading(false); });
-    const { data } = supabase.auth.onAuthStateChange((_event, next) => setSession(next));
+    // I dati in cache appartengono a un solo utente: si azzerano al logout o se cambia utente.
+    const sync = (next: Session | null) => {
+      try {
+        const owner = window.localStorage.getItem(CACHE_USER_KEY);
+        if (!next) clearQueryCache();
+        else if (owner && owner !== next.user.id) { clearQueryCache(); window.localStorage.setItem(CACHE_USER_KEY, next.user.id); }
+        else if (!owner) window.localStorage.setItem(CACHE_USER_KEY, next.user.id);
+      } catch { /* storage non disponibile */ }
+    };
+    supabase.auth.getSession().then(({ data }) => { sync(data.session); setSession(data.session); setLoading(false); });
+    const { data } = supabase.auth.onAuthStateChange((event, next) => {
+      if (event === "SIGNED_OUT") clearQueryCache(); else sync(next);
+      setSession(next);
+    });
     return () => data.subscription.unsubscribe();
   }, []);
   return { session, loading };
@@ -35,6 +49,9 @@ function LoginScreen() {
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+
+  // Sveglia la funzione serverless mentre si scrive la password (niente dati, solo /api/health).
+  useEffect(() => { fetch(buildApiUrl("/api/health")).catch(() => undefined); }, []);
 
   async function submit(e: FormEvent) {
     e.preventDefault();

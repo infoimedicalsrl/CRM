@@ -1,4 +1,6 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { CACHE_MAX_AGE, queryPersister } from "@/lib/query-cache";
 import { Outlet, Link, createRootRouteWithContext } from "@tanstack/react-router";
 import { AppShell } from "@/components/app/app-shell";
 import { AuthGate } from "@/components/app/auth-gate";
@@ -16,5 +18,5 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  return <QueryClientProvider client={queryClient}><TooltipProvider delayDuration={200}><AuthGate><AppShell><Outlet /></AppShell></AuthGate><Toaster position="top-right" /></TooltipProvider></QueryClientProvider>;
+  return <PersistQueryClientProvider client={queryClient} persistOptions={{ persister: queryPersister, maxAge: CACHE_MAX_AGE, buster: "v1", dehydrateOptions: { shouldDehydrateQuery: (q) => q.state.status === "success" && q.queryKey[0] !== "health" } }}><TooltipProvider delayDuration={200}><AuthGate><AppShell><Outlet /></AppShell></AuthGate><Toaster position="top-right" /></TooltipProvider></PersistQueryClientProvider>;
 }

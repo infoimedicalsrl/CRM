@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { useRouter } from "@tanstack/react-router";
+import { useIsFetching } from "@tanstack/react-query";
 import { LogOut, Menu, PanelLeftClose, PanelLeftOpen, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
@@ -12,6 +13,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const router = useRouter();
+  const updating = useIsFetching({ predicate: (q) => q.queryKey[0] !== "health" && q.state.data !== undefined }) > 0;
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -61,6 +63,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <RefreshCw className="size-4" aria-hidden />
               Aggiorna
             </Button>
+            {updating && <span className="hidden text-xs text-muted-foreground sm:inline" role="status">Aggiornamento…</span>}
             <Button variant="outline" size="sm" onClick={() => void supabase.auth.signOut()} aria-label="Esci">
               <LogOut className="size-4" aria-hidden />
               Esci

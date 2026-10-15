@@ -1,3 +1,4 @@
+import time
 from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI
@@ -22,7 +23,10 @@ async def lifespan(_: FastAPI):
 
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
+        started = time.perf_counter()
         response = await call_next(request)
+        # Visibile in DevTools > Rete > Timing: quanto impiega il solo backend.
+        response.headers["Server-Timing"] = f"app;dur={(time.perf_counter() - started) * 1000:.0f}"
         response.headers.setdefault("X-Content-Type-Options", "nosniff")
         response.headers.setdefault("Referrer-Policy", "no-referrer")
         response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")

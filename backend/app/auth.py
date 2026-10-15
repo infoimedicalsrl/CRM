@@ -14,7 +14,7 @@ from fastapi import Header, HTTPException
 
 from app import config
 
-_CACHE_TTL = 60.0
+_CACHE_TTL = 300.0
 _cache: dict[str, tuple[float, dict]] = {}
 
 
