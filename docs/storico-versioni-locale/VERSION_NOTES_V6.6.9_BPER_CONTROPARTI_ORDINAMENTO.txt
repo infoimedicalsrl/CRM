@@ -1,7 +1,0 @@
-Peppol V6.6.9 – correzioni controparti BPER e ordinamento
-
-- Bonifico istantaneo: la controparte viene estratta tra "a favore di" e "EUR", anche se EUR è seguito da due punti o altra punteggiatura.
-- Pagamento su circuito internazionale: il parser rimuove la città finale riconosciuta prima di ITA e la coda tecnica "Operazione carta". Aggiunte varianti di città tra cui GRAVINA DI CT.
-- Ordinamento movimenti: disponibili Ordine del PDF (predefinito), Data: dal + vecchio e Data: dal + recente.
-
-Test eseguiti: py_compile sul parser BPER e prove sintetiche su bonifico istantaneo e pagamenti internazionali (Catania, Gravina di CT, Roma). Non testato su un estratto conto BPER reale.
