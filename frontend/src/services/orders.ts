@@ -2,7 +2,7 @@ import { apiDelete, apiGet, apiPatch, apiPost, type QueryParams } from "./api";
 import type { Order } from "@/types";
 
 export interface OrdersFilters { search?: string; customerId?: string; from?: string; to?: string; }
-interface RawOrder { id:number; order_number:string; order_date?:string|null; customer_id?:number; customer?:string; customer_vat?:string|null; currency?:string|null; total_net:number; total_vat:number; total_gross:number; }
+interface RawOrder { id:number; order_number:string; order_date?:string|null; customer_id?:number; customer?:string; customer_vat?:string|null; currency?:string|null; total_net:number; total_vat:number; total_gross:number; status?:string; }
 interface RawDeliveryLine { order_line_id:number; product_id:number; supplier_product_code:string; description?:string|null; unit_code?:string|null; ordered_quantity:number; delivered_quantity:number; ddt_delivered_quantity?:number; manual_delivered_quantity?:number|null; residual_quantity:number; over_quantity:number; status:string }
 interface RawDelivery { status:string; ordered_quantity:number; delivered_quantity:number; residual_quantity:number; over_quantity?:number; lines:RawDeliveryLine[]; ddts:Array<{id:number;number:string;date?:string|null;quantity:number;status:string}> }
 interface RawDetail extends Omit<RawOrder, "customer"> { delivery:RawDelivery; customer:{id:number;name:string;vat_number?:string|null;peppol_endpoint?:string|null}; source_filename?:string|null; lines:Array<{id:number;product_id:number;line_number?:string|null;supplier_product_code:string;description?:string|null;quantity:number;unit_code?:string|null;unit_price:number;line_net:number;vat_category?:string|null;vat_rate:number;line_vat:number;line_gross:number;is_zero_value:boolean}> }
@@ -13,7 +13,7 @@ function toParams(filters?: OrdersFilters): QueryParams {
 
 export async function getOrders(filters?: OrdersFilters): Promise<Order[]> {
   const data = await apiGet<RawOrder[]>("/api/orders", toParams(filters));
-  return data.map((o) => ({ id:o.id, order_number:o.order_number, order_date:o.order_date, customer_id:o.customer_id, customer_name:o.customer, customer_vat:o.customer_vat, currency:o.currency, net_amount:Number(o.total_net), vat_amount:Number(o.total_vat), total_amount:Number(o.total_gross) }));
+  return data.map((o) => ({ id:o.id, order_number:o.order_number, order_date:o.order_date, customer_id:o.customer_id, customer_name:o.customer, customer_vat:o.customer_vat, currency:o.currency, net_amount:Number(o.total_net), vat_amount:Number(o.total_vat), total_amount:Number(o.total_gross), status:o.status }));
 }
 
 export async function getOrder(id: string): Promise<Order> {
