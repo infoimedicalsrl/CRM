@@ -64,6 +64,18 @@ function OrdersPage() {
 
   async function importBulk(){if(!bulkFiles.length)return;setImportBusy(true);setImportError("");setImportMessage("");try{const r=await postFilesInBatches("/api/imports/upload-multiple",bulkFiles);setImportMessage(r.message);setBulkFiles([]);await Promise.all([queryClient.invalidateQueries({queryKey:["orders"]}),queryClient.invalidateQueries({queryKey:["dashboard"]}),queryClient.invalidateQueries({queryKey:["customers"]}),queryClient.invalidateQueries({queryKey:["products"]}),queryClient.invalidateQueries({queryKey:["analytics"]})])}catch(e){setImportError(humanizeError(e))}finally{setImportBusy(false)}}
 
+  function getStatusConfig(status?: string) {
+    switch (status) {
+      case "EVASO":
+        return { label: "Evaso", color: "bg-emerald-500", text: "text-emerald-500" };
+      case "PARZIALE":
+        return { label: "Parziale", color: "bg-amber-500", text: "text-amber-500" };
+      case "DA_EVADERE":
+      default:
+        return { label: "Da evadere", color: "bg-red-500", text: "text-red-500" };
+    }
+  }
+
   const columns: DataTableColumn<Order>[] = [
     { key: "number", header: "Numero ordine", cell: (o) => <span className="font-medium">{o.order_number}</span>, sortValue: (o) => o.order_number },
     { key: "date", header: "Data", cell: (o) => formatDate(o.order_date), sortValue: (o) => o.order_date ?? "" },
@@ -71,6 +83,24 @@ function OrdersPage() {
     { key: "net", header: "Imponibile", align: "right", cell: (o) => formatCurrency(o.net_amount), sortValue: (o) => o.net_amount ?? 0 },
     { key: "vat", header: "IVA", align: "right", cell: (o) => formatCurrency(o.vat_amount), sortValue: (o) => o.vat_amount ?? 0 },
     { key: "total", header: "Totale", align: "right", cell: (o) => <span className="font-semibold">{formatCurrency(o.total_amount)}</span>, sortValue: (o) => o.total_amount ?? 0 },
+    {
+      key: "status",
+      header: "Stato",
+      cell: (o) => {
+        const cfg = getStatusConfig(o.status);
+        return (
+          <div className="flex items-center gap-2">
+            <span className={`w-2.5 h-2.5 rounded-full ${cfg.color}`} aria-hidden="true" />
+            <span className="text-sm font-medium">{cfg.label}</span>
+          </div>
+        );
+      },
+      sortValue: (o) => {
+        // Sort: EVASO (0) > PARZIALE (1) > DA_EVADERE (2)
+        const order = { EVASO: 0, PARZIALE: 1, DA_EVADERE: 2 };
+        return order[o.status as keyof typeof order] ?? 2;
+      },
+    },
     {
       key: "actions",
       header: "Azioni",
