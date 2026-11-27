@@ -65,6 +65,52 @@ def _normalized_product_expr():
     return func.upper(func.replace(Product.supplier_product_code, " ", ""))
 
 
+def _get_order_status(db: Session, order_id: int) -> str:
+    """
+    Get order delivery status without the full summary.
+    Returns: "EVASO", "PARZIALE", "DA_EVADERE"
+    """
+    # Build subqueries for DDT delivered quantities
+    ddt_line_sub = (
+        select(OrderLine.id.label("line_id"), func.coalesce(func.sum(DeliveryNoteLine.quantity), 0).label("ddt_delivered"))
+        .join(DeliveryNoteLine, DeliveryNoteLine.order_line_id == OrderLine.id)
+        .group_by(OrderLine.id)
+    )
+
+    # Query order lines with DDT deliveries
+    rows = db.execute(
+        select(OrderLine.quantity, ddt_line_sub.c.ddt_delivered, OrderLine.manual_delivered_quantity)
+        .outerjoin(ddt_line_sub, ddt_line_sub.c.line_id == OrderLine.id)
+        .where(OrderLine.order_id == order_id)
+    ).all()
+
+    total_ordered = Decimal("0")
+    total_delivered = Decimal("0")
+
+    for row in rows:
+        ordered = Decimal(row[0])
+        ddt_delivered = Decimal(row[1]) if row[1] else Decimal("0")
+        manual_delivered = Decimal(row[2]) if row[2] else Decimal("0")
+
+        # Manual override takes priority if set
+        delivered = manual_delivered if manual_delivered > 0 else ddt_delivered
+
+        total_ordered += ordered
+        total_delivered += delivered
+
+    residual = max(Decimal("0"), total_ordered - total_delivered)
+
+    # Determine overall status
+    if residual > 0 and total_ordered > 0:
+        return "DA_EVADERE"  # Red
+    elif total_delivered >= total_ordered:
+        return "EVASO"  # Green
+    elif total_delivered > 0:
+        return "PARZIALE"  # Yellow
+    else:
+        return "DA_EVADERE"  # Red (no orders)
+
+
 def _product_code_filter(code: str):
     return _normalized_product_expr() == normalize_product_code(code)
 
@@ -120,6 +166,7 @@ def list_orders(
             "total_net": o.total_net,
             "total_vat": o.total_vat,
             "total_gross": o.total_gross,
+            "status": _get_order_status(db, o.id),
         }
         for o, c in rows
     ]
