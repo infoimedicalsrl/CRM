@@ -58,6 +58,7 @@ export interface Order {
   source_file?: string | null;
   lines?: OrderLine[];
   delivery?: DeliverySummary;
+  status?: string;
 }
 
 export interface TimeSeriesPoint { period: string; net?: number; vat?: number; total?: number; }
