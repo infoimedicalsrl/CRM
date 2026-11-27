@@ -1,0 +1,32 @@
+Peppol Sales Analytics V5.7 — DDT / consegne
+
+FUNZIONI
+- Nuova sezione DDT.
+- Import PDF manuale e automatico.
+- Cartelle locali ddt/nuovi, ddt/elaborati/YYYY/MM, ddt/errori.
+- Parser PDF locale con supporto alla codifica custom del DDT di esempio.
+- Fallback OCR locale con tesseract/pdftoppm se disponibili; nessun servizio cloud.
+- Numero DDT, data, cliente, P.IVA, riferimento ordine, codice prodotto, descrizione, quantità, UM, lotto e scadenza.
+- Collegamento automatico DDT -> ordine tramite riferimento ordine.
+- Suggerimenti automatici quando l'ordine non viene trovato.
+- Collegamento manuale.
+- DDT salvato anche quando l'ordine non esiste.
+- Collegamento retroattivo quando l'ordine viene importato successivamente.
+- Stato DDT: NON_COLLEGATO / PARZIALMENTE_COLLEGATO / COLLEGATO.
+- Prodotti presenti nel DDT ma non nell'ordine segnalati come NON ORDINATO.
+- Possibilità di marcare una riga come OMAGGIO.
+- Stato ordine: NON_CONSEGNATO / PARZIALMENTE_CONSEGNATO / COMPLETAMENTE_CONSEGNATO / SOVRACONSEGNATO.
+- Quantità ordinata, consegnata, residua e sovraconsegnata per riga.
+- Cronologia dei DDT nel dettaglio ordine.
+- Modifica DDT e righe.
+- Eliminazione DDT con ricalcolo automatico delle quantità consegnate/residue.
+- Dashboard con situazione consegne e numero DDT.
+- Export DDT Excel.
+- PDF originale conservato e mai modificato.
+
+PRIVACY
+Tutti i PDF, dati DDT, ordini e database restano sul Mac host. Il fallback OCR, se usato, è eseguito localmente.
+
+INSTALLAZIONE
+Copia il database esistente in data/database.sqlite e conserva gli XML/PDF già archiviati se vuoi mantenerne la cronologia.
+Avvia con ./start.sh.

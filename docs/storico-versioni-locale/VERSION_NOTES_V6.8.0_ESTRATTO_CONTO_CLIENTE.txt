@@ -1,0 +1,13 @@
+Peppol Sales Analytics V6.8.0 - Estratto conto cliente
+
+- Nuova sezione Estratto conto cliente nel menu, tra Analisi e Banca.
+- Importazione CSV e PDF testuali, con archivio locale del documento originale.
+- Visualizzazione del PDF originale e tabella delle righe estratte.
+- Importazione limitata alle righe con data riconosciuta nell'anno solare corrente.
+- Match tra colonna doc. e fatture vendita emesse nell'anno corrente.
+- La fattura diventa INCASSATA solo se il documento corrisponde univocamente, pagato coincide col totale fattura (tolleranza 0,01 EUR) e lo stato indica pagamento completato.
+- Collegamento dei riferimenti data/ordinativo visualizzato nella sezione Fatture vendita.
+- Le righe non abbinate, ambigue o con importi/stati non coerenti sono segnalate senza aggiornare lo stato fattura.
+- Il collegamento all'estratto cliente è registrato separatamente dai movimenti bancari.
+
+Nota: il PDF viene letto tramite estrazione testuale best-effort. I PDF scansionati e layout PDF non riconosciuti richiedono l'esportazione CSV; non è incluso OCR.

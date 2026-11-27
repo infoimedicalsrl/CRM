@@ -1,0 +1,18 @@
+PEPPOL V6.6.2 — CORREZIONE VINCOLO UNIQUE IMPORT_KEY
+
+Causa dell'errore 500:
+SQLite impone import_key univoco. In alcune importazioni due righe identiche (stessa data, valuta, importo, causale e IBAN) generavano la stessa chiave e SQLAlchemy sollevava IntegrityError.
+
+Correzione:
+- la chiave logica del movimento è usata per individuare/contrassegnare possibili duplicati;
+- la chiave salvata è resa univoca per estratto e occorrenza, quindi non provoca collisioni quando due movimenti identici sono realmente presenti nello stesso PDF;
+- il controllo dei movimenti simili e la segnalazione dei duplicati restano attivi;
+- nessun movimento esistente viene cancellato e non è richiesta una migrazione del database.
+
+INSTALLAZIONE PRUDENTE
+1. Arrestare il backend.
+2. Fare una copia di sicurezza della cartella del progetto e del database SQLite.
+3. Nel progetto già in uso, sostituire SOLO backend/app/api/bank_routes.py con quello incluso nel pacchetto.
+4. Riavviare il backend e riprovare l'importazione.
+
+Nota importante: questa modifica risolve la collisione UNIQUE mostrata nel traceback. Non dimostra da sola che gli importi/saldi estratti dal PDF siano corretti. Nel log fornito il saldo di circa -9,18 milioni è sospetto: prima di usare i dati per contabilità, verificare i movimenti e la riconciliazione. Nessun PDF di test è stato richiesto o utilizzato.

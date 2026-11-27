@@ -1,0 +1,14 @@
+Peppol V6.6.6 – BPER: lettura pagine, colonne e riconciliazione
+
+Modifiche:
+- Il PDF viene processato pagina per pagina; se le intestazioni non sono ripetute, le posizioni delle colonne vengono ereditate dalla pagina precedente.
+- USCITE viene salvata sempre negativa e INGRESSO sempre positiva, anche se entrambe sono stampate con il segno +. Il parser considera posizione e larghezza del token nella riga, non il segno.
+- Saldo iniziale e saldo finale vengono estratti separatamente e non diventano righe di movimento.
+- L'interfaccia mostra saldo iniziale e saldo finale in due card separate, con saldo calcolato e stato di riconciliazione.
+- La somma saldo iniziale + movimenti viene confrontata con il saldo finale. Se non coincide, l'importazione mostra un avviso esplicito con la differenza.
+- Il messaggio di importazione riporta anche il numero di pagine PDF lette.
+
+Verifiche effettuate:
+- Compilazione sintattica Python.
+- Test sintetico locale del parser: un'uscita +1.428,37 è diventata -1.428,37, un'entrata +2.500,00 è diventata +2.500,00; saldo iniziale 10.000,00 + movimenti = saldo finale 11.071,63.
+- Non è stato utilizzato né verificato un estratto conto BPER reale. Il risultato va confermato sulla macchina dell'utente; se la riconciliazione non è zero, non considerare l'importazione completa/corretta.

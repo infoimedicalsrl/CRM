@@ -1,0 +1,11 @@
+Peppol Sales Analytics V6.9.5
+
+Modifiche:
+- Fatture di vendita: frecce di ordinamento per data, numero, cliente, imponibile, IVA, totale e stato.
+- Fatture di vendita: pulsante importazione con pannello laterale destro e card collassabili PDF/XML ed Excel.
+- Dettaglio fattura: collegamenti all'estratto conto cliente, al movimento bancario e al DDT con selezione/scroll e evidenziazione della riga o del documento pertinente.
+- DDT: pulsante di sola icona per aprire il pannello laterale; importazione singola PDF e multipla tramite più PDF o ZIP contenente PDF.
+- Estratto conto cliente: rimossa la card informativa; titolo e comandi Aggiorna/Importa allineati in alto a destra, con pannello laterale e card collassabile.
+- Nuovo endpoint POST /api/ddts/upload-multiple per importazione multipla PDF/ZIP con riepilogo per file.
+
+Database e documenti locali non sono inclusi nel pacchetto e devono essere conservati durante l'aggiornamento.

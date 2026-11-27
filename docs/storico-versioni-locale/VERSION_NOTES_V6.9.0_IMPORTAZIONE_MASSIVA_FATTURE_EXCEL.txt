@@ -1,0 +1,20 @@
+Peppol Sales Analytics V6.9.0 — Importazione massiva fatture da Excel
+
+Nuova funzione nella sezione “Fatture vendita”:
+- Caricamento di file Excel .xlsx/.xlsm contenenti più fatture.
+- Riconoscimento delle colonne: # Fattura emessa, Data, Cliente, P.IVA, CF, Imponibile, IVA (accetta intestazioni equivalenti).
+- Supporta date Excel native e formati italiani come 07/10/26.
+- Supporta importi numerici Excel e importi testuali come “EUR 14.000,00”.
+- Calcola il totale documento come imponibile + IVA.
+- Registra le fatture con stato iniziale DA_INCASSARE e formato origine EXCEL.
+- Conserva P.IVA e codice fiscale del cliente; la colonna CF è stata aggiunta con migrazione SQLite non distruttiva.
+- Ignora fatture già presenti usando numero, data e cliente; segnala righe con campi mancanti/non validi senza interrompere l'intero import.
+- Archivia il file Excel originale in fatture/elaborate/import-excel.
+- Mantiene invariati i flussi esistenti di importazione XML/PDF e riconciliazione bancaria.
+
+Verifiche:
+- python -m compileall -q app: superato.
+- Test backend escluso tests/test_parser.py: 18 superati.
+- Smoke test dell'endpoint con workbook costruito sui due esempi richiesti: 2 fatture inserite, importi e CF verificati.
+- Installazione dipendenze frontend/build non completata in questo ambiente; build TypeScript/Vite non verificata.
+- Non testato su Mac Apple Silicon reale.

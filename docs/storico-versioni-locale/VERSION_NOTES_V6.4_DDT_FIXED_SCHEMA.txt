@@ -1,0 +1,26 @@
+V6.4 - DDT a schema fisso: codice + descrizione + quantita / lotto + scadenza
+
+Il parser DDT e' stato corretto sulla base del DDT reale 88/2026 fornito dall'utente.
+
+Schema dichiarato dei DDT:
+1) riga ordine/riferimento
+2) riga prodotto: CODICE + DESCRIZIONE + QUANTITA'
+3) riga lotto: LOTTO + SCADENZA
+4) lo stesso blocco si ripete per ogni prodotto.
+
+Correzioni:
+- la colonna fisica CODICE e' l'unica sorgente autorizzata per creare una nuova riga prodotto;
+- sono accettati anche codici brevi o alfabetici presenti realmente nella colonna CODICE, ad esempio AT3, ATS e AT-KIT;
+- il codice ripetuto nella colonna DESCRIZIONE non crea una seconda riga;
+- ogni blocco termina prima del codice prodotto successivo;
+- lotto e scadenza sono cercati esclusivamente nel blocco del relativo prodotto;
+- i lotti con spazio interno, ad esempio TEA 214 e SLA 113, vengono mantenuti integralmente;
+- il parser non associa il lotto/scadenza del prodotto precedente o successivo;
+- aggiunti test di regressione sui DDT reali 88/2026 e 15/2026.
+
+Risultato atteso per DDT 88/2026:
+AT-KIT | 24 PZ | nessun lotto/scadenza
+AT3 | 24 PZ | TEA 214 | 21/04/2029
+ATR40 | 24 PZ | TEA 271 | 27/04/2029
+ATS | 24 PZ | TEA 296 | 29/04/2029
+ATV-F140C | 24 PZ | SLA 113 | 11/10/2028

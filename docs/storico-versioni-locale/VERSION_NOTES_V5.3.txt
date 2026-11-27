@@ -1,0 +1,9 @@
+Peppol Sales Analytics V5.3
+
+Nuove funzioni:
+- Controllo varianti codici prodotto: spazi e maiuscole/minuscole non creano duplicati; le forme ricevute sono registrate e segnalate.
+- Riconciliazione automatica di eventuali duplicati legacy che differiscono solo per spazi/maiuscole.
+- Import automatico: copia XML in ordini/nuovi; dopo stabilizzazione viene importato e spostato in ordini/elaborati/AAAA/MM oppure ordini/errori.
+- Stato watcher visibile nella pagina Importazioni.
+- Export locale CSV ed Excel per Ordini, Prodotti, Clienti e Analisi. Gli export rispettano i filtri attivi.
+- Tutto resta locale sul Mac.

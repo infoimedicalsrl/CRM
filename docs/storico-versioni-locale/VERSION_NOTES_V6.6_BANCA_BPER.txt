@@ -1,0 +1,15 @@
+Peppol Sales Analytics V6.6 — sezione Banca BPER
+
+Novità:
+- Nuova voce Banca nella navigazione.
+- Importazione locale di estratti conto PDF con testo selezionabile e CSV.
+- Movimenti salvati in SQLite, con date contabile/valuta, importo, causale, controparte/IBAN quando riconoscibili, saldo progressivo e categoria.
+- Rilevamento di possibili duplicati con revisione manuale; nessuna cancellazione automatica.
+- Filtri per causale/controparte/IBAN, entrate/uscite e duplicati da verificare.
+- Riepilogo mensile e esportazione Excel.
+- Riconciliazione del saldo quando il saldo iniziale e finale sono riconosciuti dal PDF.
+
+Avvertenze:
+- Il parser non è stato testato sul PDF specifico dell'utente, come richiesto. Prima dell'uso contabile, verificare manualmente date, importi, causali e saldo riconciliato.
+- I dati rimangono nel backend locale e nel database SQLite; non viene chiamato alcun servizio cloud.
+- Le intestazioni/causali degli estratti conto possono variare: movimenti non riconosciuti non devono essere considerati importati.

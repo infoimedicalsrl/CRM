@@ -1,0 +1,32 @@
+PEPPOL V6.6.3 - CORREZIONE PARSER BPER E DATI FATTURA
+
+File aggiornati:
+- backend/app/parser/bper_bank_parser.py
+- backend/app/api/bank_routes.py
+- backend/app/database/models.py
+- backend/app/database/database.py
+- backend/tests/test_bper_bank_parser.py
+- frontend/src/routes/bank.tsx
+
+Regole applicate:
+- DATA -> data contabile
+- VALUTA -> data valuta
+- USCITE -> importo negativo nel movimento
+- INGRESSO -> importo positivo nel movimento
+- Importi italiani come 1.428,37 convertiti in Decimal 1428.37
+- Quando le intestazioni sono riconosciute nel layout PDF, gli importi vengono letti esclusivamente nelle colonne USCITE/INGRESSO. Gli importi nella causale (fattura/spese) restano separati dall'importo bancario.
+- Estrazione della controparte da "a favore di BIOTECH SRL".
+- Estrazione separata di importo fattura, spese, numeri fattura e codici CIG.
+- Esempio dato: fattura 19 PA -> CIG B5589E587C; CIG B55899781E conservato come ulteriore codice da associare alla relativa fattura quando identificata.
+- Numero bonifico SEPA, RIF e CUP non vengono usati come importo né come controparte.
+- I campi strutturati invoice_amount, invoice_details e cig_codes vengono salvati in SQLite. La causale originale viene mantenuta, quindi i codici restano ricercabili.
+- La sezione Banca visualizza l'importo fattura e i CIG rilevati.
+- Migrazione SQLite additiva automatica: aggiunge le tre colonne se mancanti, senza cancellare i dati esistenti.
+- Nessuna elaborazione cloud o chiamata a servizi esterni.
+
+Test:
+- tests/test_bper_bank_parser.py: 7 superati.
+- Suite backend completa nell'ambiente disponibile: 17 superati; 2 test del parser ordini non eseguibili perché mancano PEPPOL_SIMPLE_XML e PEPPOL_MULTI_XML.
+- Compilazione Python completata.
+
+Nota: nessun PDF reale è stato usato. Dopo l'installazione, controllare saldo e movimenti prima di usarli per riconciliazioni contabili.

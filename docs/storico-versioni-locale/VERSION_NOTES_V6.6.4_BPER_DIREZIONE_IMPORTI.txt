@@ -1,0 +1,16 @@
+Peppol V6.6.4 - correzione direzione e visualizzazione importi BPER
+
+Modifiche:
+- USCITE viene normalizzata come importo negativo e mostrata in rosso con segno meno.
+- INGRESSO/ENTRATE viene normalizzata come importo positivo e mostrata in verde con segno più.
+- Il parser PDF delimita le colonne monetarie con punti medi fra le intestazioni, per tollerare importi allineati a destra.
+- L'importazione CSV usa separatamente le colonne USCITE e INGRESSO/ENTRATE. Se entrambe sono valorizzate nella stessa riga, la riga ambigua viene ignorata anziché indovinare.
+- Il salvataggio applica il segno coerente con la direzione dichiarata.
+
+Installazione:
+1. Arrestare il backend e fare un backup del progetto e del database SQLite.
+2. Estrarre questo archivio in una cartella separata.
+3. Integrare i file modificati nel progetto esistente; non sovrascrivere database o file .env.
+4. Riavviare backend e frontend.
+
+Nota: non è stato usato alcun estratto conto reale. Prima dell'uso contabile verificare importi e riconciliazione sull'estratto locale.
