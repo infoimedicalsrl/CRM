@@ -70,8 +70,8 @@ def _get_order_status(db: Session, order_id: int) -> str:
     Get order delivery status without the full summary.
     Returns: "EVASO", "PARZIALE", "DA_EVADERE"
     """
-    # Build subqueries for DDT delivered quantities
-        ddt_line_sub = (
+# Build subqueries for DDT delivered quantities
+    ddt_line_sub = (
         select(
             OrderLine.id.label("line_id"),
             func.coalesce(
