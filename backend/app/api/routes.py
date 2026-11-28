@@ -71,10 +71,19 @@ def _get_order_status(db: Session, order_id: int) -> str:
     Returns: "EVASO", "PARZIALE", "DA_EVADERE"
     """
     # Build subqueries for DDT delivered quantities
-    ddt_line_sub = (
-        select(OrderLine.id.label("line_id"), func.coalesce(func.sum(DeliveryNoteLine.quantity), 0).label("ddt_delivered"))
-        .join(DeliveryNoteLine, DeliveryNoteLine.order_line_id == OrderLine.id)
+        ddt_line_sub = (
+        select(
+            OrderLine.id.label("line_id"),
+            func.coalesce(
+                func.sum(DeliveryNoteLine.quantity), 0
+            ).label("ddt_delivered")
+        )
+        .join(
+            DeliveryNoteLine,
+            DeliveryNoteLine.order_line_id == OrderLine.id
+        )
         .group_by(OrderLine.id)
+        .subquery()
     )
 
     # Query order lines with DDT deliveries
